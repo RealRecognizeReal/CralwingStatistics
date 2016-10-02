@@ -1,7 +1,7 @@
 {
   "apps": [
     {
-      "script": "index.js",
+      "script": "app.js",
       "watch": false,
       "env": {
         "NODE_ENV": "production"
