@@ -8,6 +8,9 @@ const
 const mongoUrl = `mongodb://${mongodb.host}:${mongodb.port}/${mongodb.database}`;
 
 router.get('/', function (req, res, next) {
+    if(req.method.toLowerCase() === 'head') {
+        return res.end();
+    }
 
     MongoClient.connect(mongoUrl, function (err, db) {
         assert.equal(null, err);
