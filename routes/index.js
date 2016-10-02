@@ -28,7 +28,7 @@ router.get('/', function (req, res, next) {
                 page.aggregate({$group: { _id: null, total: {$sum: "$formulasNumber"}}}, function( err, [{total: formulasNumber}]) {
                     if(err) return next(err);
 
-                    page.find({formulasNumber: {$gt: 0}}).sort({id: -1}).limit(10).toArray(function(err, recentPages) {
+                    page.find({formulasNumber: {$gt: 0}}).sort({_id: -1}).limit(10).toArray(function(err, recentPages) {
                         console.log(allPagesNumber, formulaPagesNumber, formulasNumber, recentPages);
 
                         res.render('index', {title: 'Express', allPagesNumber, formulaPagesNumber, formulasNumber, recentPages});

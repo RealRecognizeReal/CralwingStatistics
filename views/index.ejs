@@ -39,7 +39,11 @@
                         let recentPage = recentPages[i];
                     %>
                         <tr>
-                            <td> <%= recentPage.title %></td>
+                            <td>
+                                <a href="<%=recentPage.url%>" target="_blank">
+                                    <%= recentPage.title %>
+                                </a>
+                            </td>
                             <td> <%= recentPage.formulasNumber %></td>
                         </tr>
                     <%
@@ -53,6 +57,9 @@
         font-family: 'Nanum Gothic';
     }
 
+    a {
+        color: #cccccc;
+    }
     .title {
         text-align: center;
         font-weight: bold;
