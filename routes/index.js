@@ -7,7 +7,7 @@ const
 
 const mongoUrl = `mongodb://${mongodb.host}:${mongodb.port}/${mongodb.database}`;
 
-router.get('/', function (req, res) {
+router.get('/', function (req, res, next) {
 
     MongoClient.connect(mongoUrl, function (err, db) {
         assert.equal(null, err);
@@ -17,8 +17,14 @@ router.get('/', function (req, res) {
         let link = db.collection('link');
 
         page.count({}, function (err, allPagesNumber) {
+            if(err) return next(err);
+
             page.count({formulasNumber: {$gt: 0}}, function (err, formulaPagesNumber) {
+                if(err) return next(err);
+
                 page.aggregate({$group: { _id: null, total: {$sum: "$formulasNumber"}}}, function( err, [{total: formulasNumber}]) {
+                    if(err) return next(err);
+
                     console.log(allPagesNumber, formulaPagesNumber, formulasNumber);
 
                     res.render('index', {title: 'Express', allPagesNumber, formulaPagesNumber, formulasNumber});

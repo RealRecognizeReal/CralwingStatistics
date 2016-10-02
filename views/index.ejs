@@ -1,18 +1,26 @@
 <% include header %>
     <div class="container">
-        <div class="col-lg-3">
-            <h1 class="display-5"> 탐색 페이지 </h1>
-            <p> <%= allPagesNumber %> </p>
-        </div>
+        <div class="row">
+            <div class="col-lg-4 item">
+                <h1 class="display-5 title"> 탐색 페이지 </h1>
+                <p class="number">
+                    <%= allPagesNumber %><span class="APN plus"></span>
+                </p>
+            </div>
 
-        <div class="col-lg-3">
-            <h1 class="display-5"> 수식 페이지 </h1>
-            <p> <%= formulaPagesNumber %> </p>
-        </div>
+            <div class="col-lg-4 item">
+                <h1 class="display-5 title"> 수식 페이지 </h1>
+                <p class="number">
+                    <%= formulaPagesNumber %><span class="FPN plus"></span>
+                </p>
+            </div>
 
-        <div class="col-lg-3">
-            <h1 class="display-5"> 수식 </h1>
-            <p> <%= formulasNumber %> </p>
+            <div class="col-lg-4 item">
+                <h1 class="display-5 title"> 수식 </h1>
+                <p class="number">
+                    <%= formulasNumber %><span class="FN plus"></span>
+                </p>
+            </div>
         </div>
     </div>
 
@@ -20,5 +28,29 @@
     div, h1, h2, p {
         font-family: 'Nanum Gothic';
     }
+
+    .title {
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .number {
+        font-size: 30px;
+        text-align: center;
+    }
+
+    .container {
+        margin-top: 100px;
+    }
+
+    .item {
+        margin-bottom: 30px;
+    }
+
+    .plus {
+        color: green;
+        font-size: 20px;
+    }
 </style>
+
 <% include footer %>
