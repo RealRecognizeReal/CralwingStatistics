@@ -22,8 +22,32 @@
                 </p>
             </div>
         </div>
-    </div>
 
+        <div class="table-responsive">
+            <h1 class="diplay-5 title"> 최근 수식 페이지 </h1>
+            <table class="table table-inverse">
+                <thead>
+                    <tr>
+                        <th> 페이지 제목 </th>
+                        <th> # </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <% for(let i = 0 ; i < recentPages.length ; i++)
+                    {
+                        let recentPage = recentPages[i];
+                    %>
+                        <tr>
+                            <td> <%= recentPage.title %></td>
+                            <td> <%= recentPage.formulasNumber %></td>
+                        </tr>
+                    <%
+                    }%>
+                </tbody>
+            </table>
+        </div>
+    </div>
 <style>
     div, h1, h2, p {
         font-family: 'Nanum Gothic';

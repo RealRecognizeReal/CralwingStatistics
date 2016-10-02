@@ -28,11 +28,14 @@ router.get('/', function (req, res, next) {
                 page.aggregate({$group: { _id: null, total: {$sum: "$formulasNumber"}}}, function( err, [{total: formulasNumber}]) {
                     if(err) return next(err);
 
-                    console.log(allPagesNumber, formulaPagesNumber, formulasNumber);
+                    page.find({formulasNumber: {$gt: 0}}).sort({id: -1}).limit(10).toArray(function(err, recentPages) {
+                        console.log(allPagesNumber, formulaPagesNumber, formulasNumber, recentPages);
 
-                    res.render('index', {title: 'Express', allPagesNumber, formulaPagesNumber, formulasNumber});
+                        res.render('index', {title: 'Express', allPagesNumber, formulaPagesNumber, formulasNumber, recentPages});
 
-                    db.close();
+                        db.close();
+                    })
+
                 })
 
             })
