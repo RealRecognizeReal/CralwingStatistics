@@ -42,6 +42,8 @@ function log() {
 
                     stat.insertOne({
                         allPagesNumber, formulaPagesNumber, formulasNumber, createdAt: new Date()
+                    }, function() {
+                        db.close();
                     })
                 });
             });
