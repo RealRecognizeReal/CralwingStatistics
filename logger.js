@@ -50,7 +50,7 @@ function log() {
     });
 }
 
-function start(interval=60000) {
+function start(interval=20000) {
     if(timer) return;
 
     log();
