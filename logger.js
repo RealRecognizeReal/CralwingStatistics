@@ -6,51 +6,50 @@ const
     MongoClient = require('mongodb').MongoClient,
     {mongodb}  = require('./config'),
     assert = require('assert'),
-    mongoUrl = `mongodb://${mongodb.host}:${mongodb.port}/${mongodb.database}`;
+    mongoUrl = `mongodb://${mongodb.host}:${mongodb.port}/${mongodb.database}`,
+    Promise = require('bluebird');
 
 let timer;
 
-function log() {
-    MongoClient.connect(mongoUrl, function (err, db) {
-        console.log("Connected correctly to server");
-
-        if(err) {
-            console.error(err);
-            return;
-        }
+let log = Promise.coroutine(function*() {
+    try {
+        let db = yield MongoClient.connect(mongoUrl);
 
         let page = db.collection('page');
         let stat = db.collection('stat');
 
-        page.count({}, function (err, allPagesNumber) {
-            if(err) {
-                console.error(err);
-                return;
-            }
+        let allPagesNumber = yield page.count();
+        let formulaPagesNumber = yield page.count({formulasNumber: {$gt: 0}});
 
-            page.count({formulasNumber: {$gt: 0}}, function (err, formulaPagesNumber) {
-                if(err) {
-                    console.error(err);
-                    return;
-                };
+        page.aggregate({$group: { _id: null, total: {$sum: "$formulasNumber"}}});
 
-                page.aggregate({$group: { _id: null, total: {$sum: "$formulasNumber"}}}, function( err, [{total: formulasNumber}]) {
-                    if(err) {
-                        console.err(err);
-                        return;
+        //console.log(aggrPromise);
+
+        let formulasNumber = yield Promise.resolve({
+            then: function(resolve, reject) {
+                page.aggregate({$group: { _id: null, total: {$sum: "$formulasNumber"}}}, function(err, [{total}]) {
+                    if(err) reject(err);
+                    else {
+                        resolve(total);
                     }
-
-                    stat.insertOne({
-                        allPagesNumber, formulaPagesNumber, formulasNumber, createdAt: new Date()
-                    }, function() {
-                        db.close();
-                    })
                 });
-            });
+            }
         });
 
-    });
-}
+        let adminDB = db.admin();
+
+        let {opcounters} = yield adminDB.serverStatus();
+
+        yield stat.insertOne({
+            allPagesNumber, formulaPagesNumber,  formulasNumber, createdAt: new Date(), opcounters
+        });
+
+        db.close();
+    }
+    catch(e) {
+        console.error(e);
+    }
+});
 
 function start(interval=10000) {
     if(timer) return;
