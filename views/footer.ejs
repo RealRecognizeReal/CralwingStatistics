@@ -45,8 +45,9 @@
         let dataPoints = [];
 
         for(let i = 0 ; i < data.length ; i++) {
+            console.log(data[i]);
             dataPoints[i] = {
-                x: i,
+                x: new Date(data[i].createdAt),
                 y: data[i][field]
             };
         }
@@ -68,7 +69,8 @@
             },
             axisY: {
                 minimum: yMin
-            }
+            },
+
         };
 
         return options;
@@ -86,7 +88,7 @@
 
         let dataPoints = data.map(function(item, idx) {
             return {
-                x: idx,
+                x: new Date(item.createdAt),
                 y: item.opcounters.query
             }
         });
