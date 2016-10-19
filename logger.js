@@ -20,11 +20,6 @@ let log = Promise.coroutine(function*() {
 
         let allPagesNumber = yield page.count();
         let formulaPagesNumber = yield page.count({formulasNumber: {$gt: 0}});
-
-        page.aggregate({$group: { _id: null, total: {$sum: "$formulasNumber"}}});
-
-        //console.log(aggrPromise);
-
         let formulasNumber = yield Promise.resolve({
             then: function(resolve, reject) {
                 page.aggregate({$group: { _id: null, total: {$sum: "$formulasNumber"}}}, function(err, [{total}]) {
