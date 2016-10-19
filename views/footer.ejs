@@ -1,6 +1,6 @@
 <script src="/js/js.cookie.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-
+<% if(title === 'alan statistics') {%>
 <script>
     let APN = <%= allPagesNumber %>;
     let FPN = <%= formulaPagesNumber %>;
@@ -35,5 +35,78 @@
 
 
 </script>
+<%}%>
+
+<% if(title === 'alan perf statistics') { %>
+<script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/4.16.4/lodash.min.js"></script>
+<script src="/js/jquery.canvasjs.min.js"></script>
+<script>
+    function createDataPoints(data, field) {
+        let dataPoints = [];
+
+        for(let i = 0 ; i < data.length ; i++) {
+            dataPoints[i] = {
+                x: i,
+                y: data[i][field]
+            };
+        }
+
+        return dataPoints;
+    }
+
+    function createGraphOption(dataPoints, title) {
+        let yMin = dataPoints[0].y - 100;
+
+        let dataSeries = {type: 'line', dataPoints: dataPoints};
+
+        let options = {
+            data: [dataSeries],
+            zoomEnabled: true,
+            animationEnabled: true,
+            title: {
+                text: title
+            },
+            axisY: {
+                minimum: yMin
+            }
+        };
+
+        return options;
+    }
+
+    function createGraph(data, field, title) {
+        let dataPoints = createDataPoints(data, field);
+
+        return createGraphOption(dataPoints, title);
+    }
+
+    function drawGraph(data) {
+        let options1 = createGraph(data, 'allPagesNumber', '전체 페이지 개수');
+        let options2 = createGraph(data, 'formulaPagesNumber', '수식 페이지 개수');
+
+        let dataPoints = data.map(function(item, idx) {
+            return {
+                x: idx,
+                y: item.opcounters.query
+            }
+        });
+
+        let options3 = createGraphOption(dataPoints, '읽기 회수');
+
+        $('#chartContainer1').CanvasJSChart(options1);
+        $('#chartContainer2').CanvasJSChart(options2);
+        $('#chartContainer3').CanvasJSChart(options3);
+    }
+
+    $(document).ready(function() {
+        $.ajax('/api/stat')
+            .done(function(data) {
+                _.reverse(data);
+
+                drawGraph(data);
+            });
+    })
+</script>
+<%}%>
 </body>
 </html>
