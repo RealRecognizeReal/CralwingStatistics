@@ -45,7 +45,6 @@
         let dataPoints = [];
 
         for(let i = 0 ; i < data.length ; i++) {
-            console.log(data[i]);
             dataPoints[i] = {
                 x: new Date(data[i].createdAt),
                 y: data[i][field]
@@ -57,6 +56,11 @@
 
     function createGraphOption(dataPoints, title) {
         let yMin = dataPoints[0].y - 100;
+
+        if( title === '읽기 회수' ) {
+            for(let i = 0 ; i < dataPoints.length ; i++)
+                yMin = yMin > dataPoints[i].y ? dataPoints[i].y : yMin;
+        }
 
         let dataSeries = {type: 'line', dataPoints: dataPoints};
 
